@@ -13,7 +13,36 @@ var port = process.env.PORT || config.dev.port
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
-var app = express()
+var app = express();
+var appData = require('../data.json');
+var seller = appData.seller;
+var goods = appData.goods;
+var ratings = appData.ratings;
+
+var apiRoutes = express.Router();
+apiRoutes.get('/goods', function (req, res) {
+  res.json({
+    errno: 0,
+    data: goods
+  });
+});
+
+apiRoutes.get('/seller', function (req, res) {
+  res.json({
+    errno: 0,
+    data: seller
+  });
+});
+
+apiRoutes.get('/ratings', function (req, res) {
+  res.json({
+    errno: 0,
+    data: ratings
+  });
+});
+
+app.use('/api', apiRoutes);
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
