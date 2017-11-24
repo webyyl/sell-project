@@ -27,18 +27,26 @@ export default{
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-#app{
+ @import "common/less/mixin.less";
 	.tab{
-
 		display: flex;
 		width:100%;
 		height: 40px;
 		line-height:40px;
+		.border-1px(rgba(7, 17, 27, 0.1));
+
 		.tab-item{
 			flex:1;
+			font-size:14px;
 			text-align: center;
+			&>a{
+				display: block;
+				color: rgb(77,85,93);
+				&.v-link-active{
+					color: rgb(240,20,20);
+				}
+			}
 		}
 	}
-}
 
 </style>
