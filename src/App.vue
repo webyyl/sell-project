@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab">
 		<div class="tab-item">
 			<a v-link="{path:'/goods'}">商品</a>
@@ -18,15 +18,30 @@
 
 <script>
 import Header from './components/header/header.vue';
+const ERR_OK=0;
 export default{
-  components:{
-    'v-header':Header
-  }
+	data(){
+		return{
+			seller:{}
+		}
+	},
+	components:{
+		'v-header':Header
+	},
+	created(){
+		this.$http.get('/api/seller').then((response)=>{
+			var ResponseData=response.data
+			console.log(ResponseData)
+			 if(ResponseData.errno===ERR_OK){
+			 	this.seller=ResponseData.data;
+			 	console.log(this.seller)
+			 }
+		})
+	}
 };
 
 </script>
-
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
  @import "common/less/mixin.less";
 	.tab{
 		display: flex;
