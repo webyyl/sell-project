@@ -19,37 +19,45 @@
                 </span>
             </div>
         </div>
+        <div v-if="seller.supports" class="support-content">
+            <span class="count">{{seller.supports.length}}个</span>
+            <i class="icon-keyboard_arrow_right"></i>
+        </div>
+    </div>
+    <div class="bulletin-wrapper">
+        <span class="bullertin-title"></span><span class="bullertin-text">{{seller.bulletin}}</span>
+        <i class="icon-keyboard_arrow_right"></i>
     </div>   
 </div>  
 </template>
 
 <script>
-export default{
+export default {
     props: {
-      seller: {
-         type: Object
-      }
+        seller: {
+            type: Object
+        }
     },
     created() {
-          this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
     }
 }
-
 </script>
 
 <style rel="stylesheet/less" lang="less" scope>
+@import'../../common/less/icon.less';
 /*2倍和3倍图片*/
 .bg-image(@url){
   background-image: url("@{url}@2x.png");
   @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
     background-image: url("@{url}@3x.png");
-}
+    }
 }
 .header{
     color:#fff;
-    background:#000;
-
+    background:#939393;
     .content-wrapper{
+        position:relative;
         padding:24px 12px 18px 24px;
         font-size:0;
 
@@ -91,6 +99,7 @@ export default{
         .support{
             .icon{
                 display: inline-block;
+                vertical-align: middle;
                 width: 12px;
                 height: 12px;
                 margin-right: 4px;
@@ -112,8 +121,63 @@ export default{
             .special {
                 .bg-image('special_1');
             }
+            .text{
+                line-height:12px;
+                font-size: 10px;
+            }
         }
-
+        .support-content {
+            position: absolute;
+            right: 12px;
+            bottom: 14px;
+            padding: 0 8px;
+            height: 24px;
+            line-height: 24px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, .2);
+            text-align: center;
+            .count {
+                vertical-align: top;
+                font-size: 10px;
+            }
+            .icon-keyboard_arrow_right {
+                margin-left: 2px;
+                line-height: 24px;
+                font-size: 10px;
+            }
+        }
     }
+    .bulletin-wrapper{
+        position: relative;
+        height: 28px;
+        line-height: 28px;
+        padding: 0 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background: rgba(7,17,27,0.2);
+        .bullertin-title{
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 7px;
+            width: 22px;
+            height: 12px;
+            background-size: 22px 12px;
+            background-repeat: no-repeat;
+            .bg-image('bulletin');
+        }
+        .bullertin-text{
+            vertical-align: top;
+            margin: 0 4px;
+            font-size: 10px;
+        }
+        .icon-keyboard_arrow_right{
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            font-size: 10px
+        }
+    }
+
 }
 </style>
