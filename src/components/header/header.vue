@@ -19,36 +19,60 @@
                 </span>
             </div>
         </div>
-        <div v-if="seller.supports" class="support-content">
+        <div v-if="seller.supports" class="support-content" @click="showDetail">
             <span class="count">{{seller.supports.length}}个</span>
             <i class="icon-keyboard_arrow_right"></i>
         </div>
     </div>
-    <div class="bulletin-wrapper">
+    <div class="bulletin-wrapper" @click="showDetail">
         <span class="bullertin-title"></span><span class="bullertin-text">{{seller.bulletin}}</span>
         <i class="icon-keyboard_arrow_right"></i>
     </div>
     <div class="background">
         <img :src="seller.avatar" width="100%" height="100%">
     </div>   
+    <div v-show="detailShow" class="detail">
+        <div class="detail-wrapper clearfix">
+            <div class="detail-min">
+               <h1 class="name">{{seller.name}}</h1>
+              <star :size="48" :score="seller.score"></star>
+            </div>
+        </div>
+        <div class="detail-close"><i class="icon-close"></i></div>
+    </div>
 </div>  
 </template>
 
 <script>
+import star from 'components/star/star';
 export default {
     props: {
         seller: {
             type: Object
         }
     },
+    data(){
+        return {
+            detailShow:false
+        }
+    },
+   
+    methods:{
+        showDetail(){
+            this.detailShow=true;
+        }
+    },
     created() {
         this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+    },
+    components:{
+        star
     }
 }
 </script>
 
 <style rel="stylesheet/less" lang="less" scope>
-@import'../../common/less/icon.less';
+@import'../../common/less/bb.less';
 /*2倍和3倍图片*/
 .bg-image(@url){
   background-image: url("@{url}@2x.png");
@@ -164,7 +188,7 @@ export default {
         .bullertin-title{
             display: inline-block;
             vertical-align: top;
-            margin-top: 7px;
+            margin-top: 10px;
             width: 22px;
             height: 12px;
             background-size: 22px 12px;
@@ -190,6 +214,37 @@ export default {
         width: 100%;
         z-index: -1;
         filter: blur(10px);
+    }
+    .detail{
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background: rgba(7,17,28,0.8);
+        .detail-wrapper{
+            min-height: 100%;
+            overflow: hidden;
+            .detail-min{
+                margin-top: 64px;
+                padding-bottom: 64px
+            }
+            .name{
+                line-height: 16px;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 700;
+
+            }
+        }
+        .detail-close{
+
+            width: 32px;
+            height: 32px;
+            margin: -64px auto 0 auto;
+            font-size:32px;
+        }
     }
 
 }

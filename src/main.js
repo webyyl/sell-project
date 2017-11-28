@@ -1,10 +1,11 @@
-import Vue from 'vue'
-import App from './App'
-import VueRouter from 'vue-router'
-import VueResource from 'vue-resource'
-import Goods from 'components/goods/goods'
-import Ratings from 'components/ratings/ratings'
-import Seller from './components/seller/seller'
+import Vue from 'vue';
+import App from './App';
+import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
+import Goods from 'components/goods/goods';
+import Ratings from 'components/ratings/ratings';
+import Seller from './components/seller/seller';
+
 Vue.use(VueResource);
 //路由配置
 Vue.use(VueRouter);
