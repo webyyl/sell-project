@@ -2,7 +2,7 @@
   <div class="goods">
   	<div  class="menu-wrapper" v-el:menu-wrapper>
   		<ul>
-			<li class="menu-item" v-for="item in goods">
+			<li class="menu-item" :class="{'current':currentIndex===$index}" v-for="item in goods">
 				<span class="text border-1px" >
 					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
 				</span>				
@@ -11,7 +11,7 @@
   	</div>
   	<div class="foods-wrapper" v-el:foods-wrapper>
   		<ul>
-  			<li v-for="item in goods" class="food-list">
+  			<li v-for="item in goods" class="food-list food-list-hook">
   				<h1 class="title">{{item.name}}</h1>
   				<ul>
   					<li v-for="food in item.foods" class="food-item">
@@ -50,9 +50,24 @@ export default{
 			type:Object
 		}
 	},
+	computed:{
+		currentIndex(){
+			for(let i=0;i<this.listHeihgt.length;i++){
+				let height1=this.listHeihgt[i];
+				let height2=this.listHeihgt[i+1];
+				if(!height2 ||(this.scrollY>height1&&this.scrollY<height2)){
+
+					return i;
+				}
+			}
+			return 0;
+		}
+	},
 	data(){
 		return{
-			goods:[]
+			goods:[],
+			listHeihgt:[],
+			scrollY:0
 		}
 	},
 	created(){
@@ -64,6 +79,7 @@ export default{
 			 	this.goods=ResponseData.data;
 			 	this.$nextTick(()=>{
 			 		this._initScroll();
+			 		this._calculateHeight();
 			 	})
 			 }
 		})
@@ -71,7 +87,26 @@ export default{
 	methods:{
 		_initScroll(){
 			this.meunScroll=new BScoller(this.$els.menuWrapper,{});
-			this.meunScroll=new BScoller(this.$els.foodsWrapper,{})
+			this.foodsScroll=new BScoller(this.$els.foodsWrapper,{
+				probeType:3
+			});
+			this.foodsScroll.on('scroll',(pos)=>{
+				this.scrollY=Math.abs(Math.round(pos.y))
+			});
+		},
+		_calculateHeight(){
+			let footlist=this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
+			console.log(footlist);
+			let height=0;
+			this.listHeihgt.push(height);
+			alert(footlist.length)
+			for(let i=0; i<footlist.length; i++){
+				let item=footlist[i];
+				height+=item.clientHeight;
+				this.listHeihgt.push(height)			
+			}
+		
+
 		}
 	}
 	
