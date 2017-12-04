@@ -2,7 +2,7 @@
   <div class="goods">
   	<div  class="menu-wrapper" v-el:menu-wrapper>
   		<ul>
-			<li class="menu-item" :class="{'current':currentIndex===$index}" v-for="item in goods">
+			<li class="menu-item" :class="{'current':currentIndex===$index}" v-for="item in goods" @click="selectMenu($index,$event)">
 				<span class="text border-1px" >
 					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
 				</span>				
@@ -55,7 +55,7 @@ export default{
 			for(let i=0;i<this.listHeihgt.length;i++){
 				let height1=this.listHeihgt[i];
 				let height2=this.listHeihgt[i+1];
-				if(!height2 ||(this.scrollY>height1&&this.scrollY<height2)){
+				if(!height2 ||(this.scrollY>=height1&&this.scrollY<height2)){
 
 					return i;
 				}
@@ -85,8 +85,18 @@ export default{
 		})
 	},
 	methods:{
+		selectMenu(index,event){
+			if(!event._constructed){
+				return;
+			}
+			let foodList=this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
+			let el=foodList[index];
+			this.foodsScroll.scrollToElement(el,300);
+		},
 		_initScroll(){
-			this.meunScroll=new BScoller(this.$els.menuWrapper,{});
+			this.meunScroll=new BScoller(this.$els.menuWrapper,{
+				click:true
+			});
 			this.foodsScroll=new BScoller(this.$els.foodsWrapper,{
 				probeType:3
 			});
@@ -96,10 +106,9 @@ export default{
 		},
 		_calculateHeight(){
 			let footlist=this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
-			console.log(footlist);
 			let height=0;
 			this.listHeihgt.push(height);
-			alert(footlist.length)
+			
 			for(let i=0; i<footlist.length; i++){
 				let item=footlist[i];
 				height+=item.clientHeight;
@@ -140,6 +149,16 @@ export default{
 			height: 54px;
 			line-height: 14px;
 			padding: 0 12px;
+			&.current{
+				position: relative;
+				z-index: 10;
+				margin-top: -1px;
+				background: #fff;
+				font-weight: 700;
+				.text{
+					.border-none();
+				}
+			}
 			.text{
 				display: table-cell;
 				vertical-align: middle;
@@ -190,7 +209,7 @@ export default{
 			margin: 18px;
 			.border-1px(rgba(7,17,27,0.1))
 			&:last-child{
-				.boder-none();
+				.border-none();
 				margin-bottom: 0;
 			}
 			.icon{
