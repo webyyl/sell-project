@@ -35,14 +35,14 @@
   				</ul>
   			</li>
   		</ul>
-  		
   	</div>
-  
+  	<shopcare :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice"></shopcare>
   </div>
 </template>
 
 <script>
 import BScoller from "better-scroll";
+import shopcare from "components/shopcare/shopcare.vue";
 const ERR_OK=0;
 export default{
 	props:{
@@ -117,6 +117,9 @@ export default{
 		
 
 		}
+	},
+	components:{
+		shopcare
 	}
 	
 
