@@ -29,6 +29,9 @@
   								<span class="now">￥{{food.price}}</span>
   								<span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
   							</div>
+  							<div class="cartcontrol-wrapper">
+  								<cartcontrol :food="food"></cartcontrol>
+  							</div>
   						</div>
   						
   					</li>
@@ -36,13 +39,14 @@
   			</li>
   		</ul>
   	</div>
-  	<shopcare :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice"></shopcare>
+  	<shopcare :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice" :select-foods="selectFooddata"></shopcare>
   </div>
 </template>
 
 <script>
 import BScoller from "better-scroll";
 import shopcare from "components/shopcare/shopcare.vue";
+import cartcontrol from "components/cartcontrol/cartcontrol.vue";
 const ERR_OK=0;
 export default{
 	props:{
@@ -61,20 +65,35 @@ export default{
 				}
 			}
 			return 0;
+		},
+		selectFooddata(){
+			let fooda=[];
+			this.goods.forEach((item) => {
+			  item.foods.forEach((fooditem) => {
+			    if(fooditem.count){
+			    	fooda.push(fooditem)
+
+			    }
+			  })
+			})
+			console.log(fooda)
+			return fooda;
+
 		}
 	},
 	data(){
 		return{
 			goods:[],
 			listHeihgt:[],
-			scrollY:0
+			scrollY:0,
+			selectgoods:[{price:50,count:2}]
+
 		}
 	},
 	created(){
 		this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
 		this.$http.get('/api/goods').then((response)=>{
 			var ResponseData=response.data
-			console.log(ResponseData)
 			 if(ResponseData.errno===ERR_OK){
 			 	this.goods=ResponseData.data;
 			 	this.$nextTick(()=>{
@@ -98,6 +117,7 @@ export default{
 				click:true
 			});
 			this.foodsScroll=new BScoller(this.$els.foodsWrapper,{
+				click:true,
 				probeType:3
 			});
 			this.foodsScroll.on('scroll',(pos)=>{
@@ -119,7 +139,8 @@ export default{
 		}
 	},
 	components:{
-		shopcare
+		shopcare,
+		cartcontrol
 	}
 	
 
@@ -209,7 +230,9 @@ export default{
 		}
 		.food-item{
 			display: flex;
+			position: relative;
 			margin: 18px;
+
 			.border-1px(rgba(7,17,27,0.1))
 			&:last-child{
 				.border-none();
@@ -254,6 +277,11 @@ export default{
 						font-size: 10px;
 						color: rgb(147,153,159);
 					}
+				}
+				.cartcontrol-wrapper{
+					position: absolute;
+					right: 0;
+					bottom: 12px;
 				}
 
 			}

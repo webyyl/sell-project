@@ -18,6 +18,7 @@
   		</div>
   	</div>
   </div>
+  
 </template>
 
 <script>
@@ -65,7 +66,7 @@ export default{
 
 		},
 		payClass(){
-			if(this.totalprice>this.minprice){
+			if(this.totalprice>=this.minprice){
 				return 'enough';
 			}else{
 				return 'not-enough';
