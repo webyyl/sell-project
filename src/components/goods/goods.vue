@@ -39,7 +39,7 @@
   			</li>
   		</ul>
   	</div>
-  	<shopcare :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice" :select-foods="selectFooddata"></shopcare>
+  	<shopcare v-ref:shopcart :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice" :select-foods="selectFooddata"></shopcare>
   </div>
 </template>
 
@@ -60,7 +60,6 @@ export default{
 				let height1=this.listHeihgt[i];
 				let height2=this.listHeihgt[i+1];
 				if(!height2 ||(this.scrollY>=height1&&this.scrollY<height2)){
-
 					return i;
 				}
 			}
@@ -75,10 +74,8 @@ export default{
 
 			    }
 			  })
-			})
-			console.log(fooda)
+			})		
 			return fooda;
-
 		}
 	},
 	data(){
@@ -112,6 +109,11 @@ export default{
 			let el=foodList[index];
 			this.foodsScroll.scrollToElement(el,300);
 		},
+		_drop(target){
+			
+				this.$refs.shopcart.drop(target)
+							
+		},
 		_initScroll(){
 			this.meunScroll=new BScoller(this.$els.menuWrapper,{
 				click:true
@@ -141,6 +143,12 @@ export default{
 	components:{
 		shopcare,
 		cartcontrol
+	},
+	events:{
+		'car.add'(target) {
+			this._drop(target)
+
+		}
 	}
 	
 

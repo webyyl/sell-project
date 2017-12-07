@@ -28,6 +28,7 @@ export default{
 			}else{
 				this.food.count++;
 			}
+			this.$dispatch('car.add',event.target)
 		},
 		decrease(index,event){
 			if(!event._constructed){
