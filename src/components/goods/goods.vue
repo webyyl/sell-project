@@ -71,10 +71,10 @@ export default{
 			  item.foods.forEach((fooditem) => {
 			    if(fooditem.count){
 			    	fooda.push(fooditem)
-
 			    }
 			  })
-			})		
+			})	
+			console.log(fooda);	
 			return fooda;
 		}
 	},
