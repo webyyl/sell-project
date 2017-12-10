@@ -14,7 +14,7 @@
   			<li v-for="item in goods" class="food-list food-list-hook">
   				<h1 class="title">{{item.name}}</h1>
   				<ul>
-  					<li v-for="food in item.foods" class="food-item">
+  					<li v-for="food in item.foods" @click="selectFood(food,$event)" class="food-item">
   						<div class="icon">
   							<img width="57" height="57" :src="food.icon">
   						</div>
@@ -40,12 +40,14 @@
   		</ul>
   	</div>
   	<shopcare v-ref:shopcart :deliveryprice="seller.deliveryPrice" :minprice="seller.minPrice" :select-foods="selectFooddata"></shopcare>
+  	<food :food="selectedFood" v-ref:fooda></food>
   </div>
 </template>
 
 <script>
 import BScoller from "better-scroll";
 import shopcare from "components/shopcare/shopcare.vue";
+import food from "components/food/food.vue";
 import cartcontrol from "components/cartcontrol/cartcontrol.vue";
 const ERR_OK=0;
 export default{
@@ -74,7 +76,6 @@ export default{
 			    }
 			  })
 			})	
-			console.log(fooda);	
 			return fooda;
 		}
 	},
@@ -83,7 +84,8 @@ export default{
 			goods:[],
 			listHeihgt:[],
 			scrollY:0,
-			selectgoods:[{price:50,count:2}]
+			selectgoods:[{price:50,count:2}],
+			selectedFood:{}
 
 		}
 	},
@@ -109,8 +111,15 @@ export default{
 			let el=foodList[index];
 			this.foodsScroll.scrollToElement(el,300);
 		},
-		_drop(target){
-			
+		selectFood(food,event){
+			if(!event._constructed){
+				return;
+			}
+			this.selectedFood=food;
+			this.$refs.fooda.show();
+
+		},
+		_drop(target){	
 				this.$refs.shopcart.drop(target)
 							
 		},
@@ -142,12 +151,12 @@ export default{
 	},
 	components:{
 		shopcare,
-		cartcontrol
+		cartcontrol,
+		food
 	},
 	events:{
 		'car.add'(target) {
 			this._drop(target)
-
 		}
 	}
 	
