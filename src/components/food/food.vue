@@ -39,7 +39,7 @@
                                 <span class="name">{{rating.username}}</span>
                                 <img class="avatar" width="12" height="12" :src="rating.avatar">
                             </div>
-                            <div class="time">{{rating.rateTime}}</div>
+                            <div class="time">{{rating.rateTime|formatDate}}</div>
                             <p class="text">
                                 <span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}">
                                 </span>{{rating.text}}
@@ -47,7 +47,7 @@
                         </li>
                         
                     </ul>
-                    <div class="no-rating" v-show="!food.ratings||!food.ratings.length"></div>
+                    <div class="no-rating" v-show="!food.ratings||!food.ratings.length">暂不评论</div>
                 </div>
             </div>
         </div>
@@ -64,6 +64,7 @@ import BScoller from "better-scroll";
 import cartcontrol from "components/cartcontrol/cartcontrol.vue";
 import split from "components/split/split.vue";
 import ratingselect from "components/ratingselect/ratingselect.vue";
+import {formatDate} from '../../common/js/date.js';
 export default {
     props:{
         food:{
@@ -80,6 +81,7 @@ export default {
                 positive:'推荐',
                 negative:'吐槽'
             }
+
         }
     },
     methods:{
@@ -111,7 +113,7 @@ export default {
 
         },
         needshow(type,text){
-            if(this.onlyContent&&!text){
+            if(this.onliyContent&&!text){
                 return false;
             }
             if(this.selectType==ALL){
@@ -128,13 +130,19 @@ export default {
                 this.scroll.refresh();
             })
         },
-        'content.toogle'(onlyContent){
-            this.onlyContent=onlyContent;
+        'content.toogle'(onlycontent){
+            this.onliyContent=onlycontent;
             this.$nextTick(()=>{
                 this.scroll.refresh();
             })
         }
 
+    },
+    filters: {
+        formatDate(time) {
+            let date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm');
+        }
     },
     components:{
         cartcontrol,
@@ -322,7 +330,11 @@ export default {
                         color: rgb(7,17,27);
                     }
                 }
-
+            }
+            .no-rating{
+                padding: 16px 0;
+                font-size: 12px;
+                color: rgb(147,153,159);
             }
         }
     }
