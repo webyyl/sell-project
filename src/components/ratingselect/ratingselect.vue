@@ -10,8 +10,6 @@
             <span class="text">只看有内容的评价</span>
         </div>
     </div>
-   
-
 </template>
 
 <script>
