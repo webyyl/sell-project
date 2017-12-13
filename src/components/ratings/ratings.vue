@@ -29,7 +29,7 @@
 	  	<ratingselect :select-type="selectType" :only-content="onliyContent" :desc="desc" :ratings="ratings"></ratingselect>
 	  	<div class="rating-wrapper">
 	  		<ul>
-	  			<li v-for="rating in ratings" class="rating-item">
+	  			<li v-for="rating in ratings" class="rating-item" v-show="needshow(rating.rateType,rating.text)">
 	  				<div class="avatar"><img width="28" height="28" :src="rating.avatar"></div>
 	  				<div class="content">
 	  					<h1 class="name">{{rating.username}}</h1>
@@ -42,7 +42,7 @@
 	  					<p class="text">{{rating.text}}</p>
 	  					<div class="recommend" v-show="rating.recommend&&rating.recommend.length">
 	  						<span class="icon-thumb_up"></span>
-	  						<span v-for="item in rating.recommend">{{item}}</span>
+	  						<span class="item" v-for="item in rating.recommend">{{item}}</span>
 	  					</div>
 	  					<div class="time">
 	  						{{rating.rateTime | formatDate}}
@@ -84,11 +84,13 @@ export default{
 
         }
     },
+     
     created(){
 		this.$http.get('/api/ratings').then((response) => {
                 response = response.body;
                 if (response.errno === ERR_OK) {
                     this.ratings = response.data;
+                    console.log(this.$els.ratingsWrapper);
                     this.$nextTick(() => {
                         this.scroll = new BScoller(this.$els.ratingsWrapper, {
                             click: true,
@@ -98,6 +100,18 @@ export default{
                 }
             });
 	},
+    methods:{
+        needshow(type,text){
+            if(this.onliyContent&&!text){
+                return false;
+            }
+            if(this.selectType==ALL){
+                return true;
+            }else{
+                return type===this.selectType
+            }
+        }
+    },
 	filters: {
         formatDate(time) {
             let date = new Date(time);
@@ -108,13 +122,29 @@ export default{
 		star,
 		split,
 		ratingselect
-	}
+	},
+    events:{
+        'ratingtype.select'(type){
+            this.selectType=type;
+            this.$nextTick(()=>{
+                this.scroll.refresh();
+            })
+        },
+        'content.toogle'(onlycontent){
+            this.onliyContent=onlycontent;
+            this.$nextTick(()=>{
+                this.scroll.refresh();
+            })
+        }
+
+    }
 
 }
 
 </script>
 
 <style rel="stylesheet/less" lang="less" scope>
+@import '../../common/less/mixin.less';
 .ratings{
     position: fixed;
     top: 174px;
@@ -203,6 +233,85 @@ export default{
 			}
 		}
 	}
+    .rating-wrapper{
+        padding: 0 18px;
+        .rating-item{
+            display: flex;
+            padding: 18px 0;
+            .border-1px(rgb(7,17,27,0.1));
+            .avatar{
+                flex: 0 0 28px;
+                width: 28px;
+                margin-right: 12px;
+                img{
+                    border-radius: 50%
+                }
+            }
+            .content{
+                position: relative;
+                width: 100%;
+                
+                .name{
+                    margin-bottom: 4px;
+                    line-height: 12px;
+                    font-size: 10px;
+                    color: rgb(7,17,27);
+                }
+                .star-wrapper{
+                    margin-bottom: 6px;
+                    font-size: 0;
+                    .star{
+                        display: inline-block;
+                        vertical-align: top;
+                        margin-right: 6px;
+                    }
+                    .delivery{
+                        display: inline-block;
+                        vertical-align: top;
+                        line-height: 12px;
+                        font-size: 10px;
+                        color: rgb(147,153,159);
+
+                    }
+                }
+                .text{
+                    margin-bottom: 8px;
+                    line-height: 18px;
+                    color: rgb(7,17,27);
+                    font-size: 12px;
+                }
+                .recommend{
+                    line-height: 16px;
+                    font-size: 0;
+                    .icon-thumb_up,.item{
+                        display: inline-block;
+                        margin: 0 8px 4px 0;
+                        font-size: 9px;
+                    }
+                    .icon-thumb_up{
+                        color: rgb(0,160,220);
+                    }
+                    .item{
+                        padding: 0 6px;
+                        border: 1px solid rgba(7,17,27,0.1);
+                        border-radius: 1px;
+                        color: rgb(147,153,159);
+                        background: #fff;
+                    }
+                }
+                .time{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    line-height: 12px;
+                    font-size: 10px;
+                    color: rgb(147,153,159);
+                }
+
+
+            }
+        }
+    }
 }
 
 </style>
