@@ -112,7 +112,7 @@ export default{
       if(!event._constructed){
         return;
       }
-      this.favorite=!this.favorite
+      this.favorite=!this.avoritef
     },
     _initScroll(){
       if(!this.scroll){
